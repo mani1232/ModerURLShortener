@@ -1,10 +1,47 @@
 package cc.worldmandia.moderURLShortener
 
+import io.r2dbc.spi.ConnectionFactory
+import kotlinx.coroutines.flow.Flow
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
+import org.springframework.data.repository.kotlin.CoroutineSortingRepository
+import org.springframework.data.repository.query.Param
+import org.springframework.r2dbc.connection.R2dbcTransactionManager
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.ReactiveTransactionManager
+import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @Repository
-interface UserRepo: CoroutineCrudRepository<UserEntity, Long>
+interface UserRepo : CoroutineSortingRepository<UserEntity, Long>, CoroutineCrudRepository<UserEntity, Long> {
+}
 
 @Repository
-interface URLRepo: CoroutineCrudRepository<URLEntity, Long>
+interface URLRepo : CoroutineSortingRepository<URLEntity, Long>, CoroutineCrudRepository<URLEntity, Long> {
+
+}
+
+@Repository
+interface UserAndURLRepo : CoroutineSortingRepository<UserAndURLEntity, Long>,
+    CoroutineCrudRepository<UserAndURLEntity, Long> {
+    fun findAllByUserId(userId: Long): Flow<URLEntity>
+    fun findAllByUrlId(urlId: Long): Flow<UserEntity>
+
+    suspend fun deleteAllByUrlId(urlId: Long)
+    suspend fun deleteAllByUserId(userId: Long)
+
+    @Query("INSERT INTO users_urls (user_id, url_id) values (:userId, :urlId)")
+    suspend fun connectUrlAndUser(@Param("urlId") urlId: Long, @Param("userId") userId: Long)
+
+}
+
+@Configuration
+@EnableTransactionManagement
+class DatabaseConfiguration {
+
+    @Bean
+    fun transactionManager(connectionFactory: ConnectionFactory): ReactiveTransactionManager {
+        return R2dbcTransactionManager(connectionFactory)
+    }
+}
