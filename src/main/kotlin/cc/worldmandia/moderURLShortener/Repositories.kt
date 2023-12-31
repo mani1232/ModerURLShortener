@@ -4,10 +4,8 @@ import io.r2dbc.spi.ConnectionFactory
 import kotlinx.coroutines.flow.Flow
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.data.repository.kotlin.CoroutineSortingRepository
-import org.springframework.data.repository.query.Param
 import org.springframework.r2dbc.connection.R2dbcTransactionManager
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.ReactiveTransactionManager
@@ -25,8 +23,8 @@ interface URLRepo : CoroutineSortingRepository<URLEntity, Long>, CoroutineCrudRe
 @Repository
 interface UserAndURLRepo : CoroutineSortingRepository<UserAndURLEntity, Long>,
     CoroutineCrudRepository<UserAndURLEntity, Long> {
-    fun findAllByUserId(userId: Long): Flow<URLEntity>
-    fun findAllByUrlId(urlId: Long): Flow<UserEntity>
+    fun findAllByUserId(userId: Long): Flow<UserAndURLEntity>
+    fun findAllByUrlId(urlId: Long): Flow<UserAndURLEntity>
 
     suspend fun deleteAllByUrlId(urlId: Long)
     suspend fun deleteAllByUserId(userId: Long)

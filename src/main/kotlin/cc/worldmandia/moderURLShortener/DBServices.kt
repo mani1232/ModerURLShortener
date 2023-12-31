@@ -9,7 +9,7 @@ interface UserService {
 }
 
 interface URLService {
-    suspend fun save(user: UrlDTO): UrlDTO?
+    suspend fun save(url: UrlDTO): UrlDTO?
 
     suspend fun findById(id: Long): UrlDTO?
 
