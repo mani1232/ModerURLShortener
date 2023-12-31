@@ -16,7 +16,7 @@ class UserApiRESTController {
     @GetMapping("/{id}")
     suspend fun findOne(@PathVariable id: Long) = userRepository.findById(id) ?: throw NotFoundException(id)
     @GetMapping("/")
-    fun findAll() = userRepository.userRepo.findAll()
+    fun findAll() = userRepository.findAll()
 
     @PutMapping("/{id}")
     suspend fun update(@PathVariable id: Long, @RequestBody updateUser: UserDTO) = if (userRepository.findById(id) != null) userRepository.save(updateUser) else throw NotFoundException(id)

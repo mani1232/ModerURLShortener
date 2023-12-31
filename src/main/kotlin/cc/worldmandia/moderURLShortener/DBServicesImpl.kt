@@ -1,5 +1,6 @@
 package cc.worldmandia.moderURLShortener
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toSet
 import org.springframework.stereotype.Service
@@ -24,6 +25,10 @@ class UserServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val 
         userAndURLEntity.deleteAllByUserId(id)
         userRepo.deleteById(id)
     }
+
+    override fun findAll(): Flow<UserDTO> {
+        return userRepo.findAll().map { UserMapper.toDto(it, userAndURLEntity.findAllByUserId(it.id).map { url -> URLMapper.toDto(urlRepo.findById(url.urlId)!!, null) }.toSet().toMutableSet()) }
+    }
 }
 
 @Service
@@ -45,5 +50,9 @@ class URLServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val u
     override suspend fun deleteById(id: Long) {
         userAndURLEntity.deleteAllByUrlId(id)
         urlRepo.deleteById(id)
+    }
+
+    override fun findAll(): Flow<UrlDTO> {
+        return urlRepo.findAll().map { URLMapper.toDto(it, userAndURLEntity.findAllByUrlId(it.id).map { user -> UserMapper.toDto(userRepo.findById(user.urlId)!!, null) }.toSet().toMutableSet()) }
     }
 }
