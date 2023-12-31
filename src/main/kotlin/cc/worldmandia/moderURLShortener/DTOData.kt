@@ -1,5 +1,6 @@
 package cc.worldmandia.moderURLShortener
 
+import org.springframework.data.annotation.Transient
 import java.time.LocalDate
 
 data class UserDTO(
@@ -8,6 +9,7 @@ data class UserDTO(
     val username: String,
     var password: String,
     var token: String,
+    @Transient
     val urlIds: MutableSet<UrlDTO>? = mutableSetOf(),
 )
 
@@ -21,5 +23,6 @@ data class UrlDTO(
     var clickCount: Int,
     var shortUrl: String,
     var fullUrl: String,
+    @Transient
     val userIds: MutableSet<UserDTO>? = mutableSetOf()
 )

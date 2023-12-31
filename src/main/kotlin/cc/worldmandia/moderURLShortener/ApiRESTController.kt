@@ -31,3 +31,32 @@ class UserApiRESTController {
         if (userRepository.findById(id) != null) userRepository.deleteById(id) else throw NotFoundException(id)
 
 }
+
+@RestController
+@RequestMapping("/v1/api/url")
+class URLApiRESTController {
+
+    @Autowired
+    lateinit var urlRepository: URLServiceImpl
+
+    @PostMapping("/")
+    suspend fun create(@RequestBody newURL: UrlDTO) =
+        if (urlRepository.findById(newURL.id) != null) urlRepository.save(newURL) else throw AlreadyExistException(
+            newURL.id
+        )
+
+    @GetMapping("/{id}")
+    suspend fun findOne(@PathVariable id: Long) = urlRepository.findById(id) ?: throw NotFoundException(id)
+
+    @GetMapping("/")
+    fun findAll() = urlRepository.findAll()
+
+    @PutMapping("/{id}")
+    suspend fun update(@PathVariable id: Long, @RequestBody updateURL: UrlDTO) =
+        if (urlRepository.findById(id) != null) urlRepository.save(updateURL) else throw NotFoundException(id)
+
+    @DeleteMapping("/{id}")
+    suspend fun delete(@PathVariable id: Long) =
+        if (urlRepository.findById(id) != null) urlRepository.deleteById(id) else throw NotFoundException(id)
+
+}

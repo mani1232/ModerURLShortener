@@ -1,7 +1,7 @@
 package cc.worldmandia.moderURLShortener
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.toSet
 import org.springframework.stereotype.Service
 
@@ -15,13 +15,14 @@ class UserServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val 
         urls.collect {
             userAndURLEntity.save(UserAndURLEntity(userId = userEntity.id, urlId = it.id))
         }
-        return UserMapper.toDto(userEntity, urls.map { URLMapper.toDto(it, null) }.toSet().toMutableSet())
+        return UserMapper.toDto(userEntity, urls.mapNotNull { URLMapper.toDto(it, null) }.toSet().toMutableSet())
     }
 
     override suspend fun findById(id: Long): UserDTO? {
         return UserMapper.toDto(
-            userRepo.findById(id)!!,
-            userAndURLEntity.findAllByUserId(id).map { URLMapper.toDto(urlRepo.findById(it.urlId)!!, null) }.toSet()
+            userRepo.findById(id),
+            userAndURLEntity.findAllByUserId(id).mapNotNull { URLMapper.toDto(urlRepo.findById(it.urlId)!!, null) }
+                .toSet()
                 .toMutableSet()
         )
     }
@@ -32,11 +33,11 @@ class UserServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val 
     }
 
     override fun findAll(): Flow<UserDTO> {
-        return userRepo.findAll().map {
+        return userRepo.findAll().mapNotNull {
             UserMapper.toDto(
                 it,
                 userAndURLEntity.findAllByUserId(it.id)
-                    .map { url -> URLMapper.toDto(urlRepo.findById(url.urlId)!!, null) }.toSet().toMutableSet()
+                    .mapNotNull { url -> URLMapper.toDto(urlRepo.findById(url.urlId)!!, null) }.toSet().toMutableSet()
             )
         }
     }
@@ -52,13 +53,14 @@ class URLServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val u
         users.collect {
             userAndURLEntity.save(UserAndURLEntity(urlId = urlEntity.id, userId = it.id))
         }
-        return URLMapper.toDto(urlEntity, users.map { UserMapper.toDto(it, null) }.toSet().toMutableSet())
+        return URLMapper.toDto(urlEntity, users.mapNotNull { UserMapper.toDto(it, null) }.toSet().toMutableSet())
     }
 
     override suspend fun findById(id: Long): UrlDTO? {
         return URLMapper.toDto(
-            urlRepo.findById(id)!!,
-            userAndURLEntity.findAllByUrlId(id).map { UserMapper.toDto(userRepo.findById(it.urlId)!!, null) }.toSet()
+            urlRepo.findById(id),
+            userAndURLEntity.findAllByUrlId(id).mapNotNull { UserMapper.toDto(userRepo.findById(it.urlId)!!, null) }
+                .toSet()
                 .toMutableSet()
         )
     }
@@ -69,11 +71,12 @@ class URLServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val u
     }
 
     override fun findAll(): Flow<UrlDTO> {
-        return urlRepo.findAll().map {
+        return urlRepo.findAll().mapNotNull {
             URLMapper.toDto(
                 it,
                 userAndURLEntity.findAllByUrlId(it.id)
-                    .map { user -> UserMapper.toDto(userRepo.findById(user.urlId)!!, null) }.toSet().toMutableSet()
+                    .mapNotNull { user -> UserMapper.toDto(userRepo.findById(user.urlId)!!, null) }.toSet()
+                    .toMutableSet()
             )
         }
     }

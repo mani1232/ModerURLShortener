@@ -1,15 +1,15 @@
 package cc.worldmandia.moderURLShortener
 
 object UserMapper {
-    fun toDto(userEntity: UserEntity, urls: MutableSet<UrlDTO>?): UserDTO {
-        return UserDTO(
+    fun toDto(userEntity: UserEntity?, urls: MutableSet<UrlDTO>?): UserDTO? {
+        return if (userEntity != null) UserDTO(
             id = userEntity.id,
             displayName = userEntity.displayName,
             password = userEntity.password,
             token = userEntity.token,
             username = userEntity.username,
             urlIds = urls
-        )
+        ) else null
     }
 
     fun fromDto(userEntity: UserDTO): UserEntity {
@@ -24,8 +24,8 @@ object UserMapper {
 }
 
 object URLMapper {
-    fun toDto(urlEntity: URLEntity, users: MutableSet<UserDTO>?): UrlDTO {
-        return UrlDTO(
+    fun toDto(urlEntity: URLEntity?, users: MutableSet<UserDTO>?): UrlDTO? {
+        return if (urlEntity != null) UrlDTO(
             id = urlEntity.id,
             clickCount = urlEntity.clickCount,
             createdDate = urlEntity.createdDate,
@@ -36,7 +36,7 @@ object URLMapper {
             shortUrl = urlEntity.shortUrl,
             title = urlEntity.title,
             userIds = users,
-        )
+        ) else null
     }
 
     fun fromDto(urlEntity: UrlDTO): URLEntity {
