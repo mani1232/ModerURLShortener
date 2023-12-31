@@ -12,13 +12,10 @@ import org.springframework.transaction.ReactiveTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @Repository
-interface UserRepo : CoroutineSortingRepository<UserEntity, Long>, CoroutineCrudRepository<UserEntity, Long> {
-}
+interface UserRepo : CoroutineSortingRepository<UserEntity, Long>, CoroutineCrudRepository<UserEntity, Long>
 
 @Repository
-interface URLRepo : CoroutineSortingRepository<URLEntity, Long>, CoroutineCrudRepository<URLEntity, Long> {
-
-}
+interface URLRepo : CoroutineSortingRepository<URLEntity, Long>, CoroutineCrudRepository<URLEntity, Long>
 
 @Repository
 interface UserAndURLRepo : CoroutineSortingRepository<UserAndURLEntity, Long>,
