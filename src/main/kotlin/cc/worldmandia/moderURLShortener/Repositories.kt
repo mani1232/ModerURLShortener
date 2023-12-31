@@ -31,9 +31,6 @@ interface UserAndURLRepo : CoroutineSortingRepository<UserAndURLEntity, Long>,
     suspend fun deleteAllByUrlId(urlId: Long)
     suspend fun deleteAllByUserId(userId: Long)
 
-    @Query("INSERT INTO users_urls (user_id, url_id) values (:userId, :urlId)")
-    suspend fun connectUrlAndUser(@Param("urlId") urlId: Long, @Param("userId") userId: Long)
-
 }
 
 @Configuration

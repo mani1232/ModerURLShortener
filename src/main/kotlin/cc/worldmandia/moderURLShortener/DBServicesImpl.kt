@@ -11,7 +11,7 @@ class UserServiceImpl(private val userRepo: UserRepo, private val urlRepo: URLRe
         val userEntity = userRepo.save(UserMapper.fromDto(user))
         val urls = urlRepo.saveAll(user.urlIds?.map { URLMapper.fromDto(it) }?.toMutableSet() ?: mutableSetOf()).toSet()
         urls.forEach {
-            userAndURLEntity.connectUrlAndUser(userId = userEntity.id, urlId = it.id)
+            userAndURLEntity.save(UserAndURLEntity(userId = userEntity.id, urlId = it.id))
         }
         return UserMapper.toDto(userEntity, urls.map { URLMapper.toDto(it, null) }.toMutableSet())
     }
