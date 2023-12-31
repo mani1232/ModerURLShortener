@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/v1/api/user")
+@RequestMapping("/api/v1/user")
 class UserApiRESTController {
 
     @Autowired
@@ -33,7 +33,7 @@ class UserApiRESTController {
 }
 
 @RestController
-@RequestMapping("/v1/api/url")
+@RequestMapping("/api/v1/url")
 class URLApiRESTController {
 
     @Autowired

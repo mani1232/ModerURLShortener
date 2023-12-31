@@ -18,7 +18,7 @@ class SecurityConfig {
     fun apiHttpSecurity(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http {
             authorizeExchange {
-                authorize(antPattern = "/v1/api/**", permitAll)
+                authorize(antPattern = "/api/v1/**", permitAll)
             }
         }
     }
@@ -27,9 +27,8 @@ class SecurityConfig {
     fun webHttpSecurity(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http {
             authorizeExchange {
-                authorize(anyExchange, authenticated)
+                authorize(antPattern = "/**", permitAll)
             }
-            httpBasic { }
         }
     }
 
