@@ -26,6 +26,9 @@ repositories {
 
 dependencies {
 
+	// jwt
+	implementation("com.auth0:java-jwt:4.4.0")
+
 	// open api
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
 

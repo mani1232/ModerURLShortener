@@ -1,13 +1,18 @@
 package cc.worldmandia.moderURLShortener
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.toSet
+import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val userAndURLEntity: UserAndURLRepo) :
     UserService {
+    fun findByUserName(username: String): UserDTO? {
+        return UserMapper.toDto(runBlocking { userRepo.findUserEntityByUsername(username).firstOrNull() }, null)
+    }
 
     override suspend fun save(user: UserDTO): UserDTO? {
         val userEntity = userRepo.save(UserMapper.fromDto(user))

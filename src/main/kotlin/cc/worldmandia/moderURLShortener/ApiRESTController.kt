@@ -1,6 +1,7 @@
 package cc.worldmandia.moderURLShortener
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -10,9 +11,18 @@ class UserApiRESTController {
     @Autowired
     lateinit var userRepository: UserServiceImpl
 
+
+    val encoder = BCryptPasswordEncoder(10)
+
     @PostMapping("/")
     suspend fun create(@RequestBody newUser: UserDTO) =
-        if (userRepository.findById(newUser.id) != null) userRepository.save(newUser) else throw AlreadyExistException(
+        if (userRepository.findById(newUser.id) == null) userRepository.save(
+            newUser.copy(
+                password = encoder.encode(
+                    newUser.password
+                )
+            )
+        ) else throw AlreadyExistException(
             newUser.id
         )
 
@@ -41,7 +51,7 @@ class URLApiRESTController {
 
     @PostMapping("/")
     suspend fun create(@RequestBody newURL: UrlDTO) =
-        if (urlRepository.findById(newURL.id) != null) urlRepository.save(newURL) else throw AlreadyExistException(
+        if (urlRepository.findById(newURL.id) == null) urlRepository.save(newURL) else throw AlreadyExistException(
             newURL.id
         )
 
