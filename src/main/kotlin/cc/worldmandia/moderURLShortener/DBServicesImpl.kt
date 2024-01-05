@@ -16,7 +16,7 @@ class UserServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val 
 
     override suspend fun save(user: UserDTO): UserDTO? {
         val userEntity = userRepo.save(UserMapper.fromDto(user))
-        val urls = urlRepo.saveAll(user.urlIds?.map { URLMapper.fromDto(it) }?.toMutableSet() ?: mutableSetOf())
+        val urls = urlRepo.saveAll(user.urls?.map { URLMapper.fromDto(it) }?.toMutableSet() ?: mutableSetOf())
         urls.collect {
             userAndURLEntity.save(UserAndURLEntity(userId = userEntity.id, urlId = it.id))
         }
@@ -54,7 +54,7 @@ class URLServiceImpl(val userRepo: UserRepo, val urlRepo: URLRepo, private val u
 
     override suspend fun save(url: UrlDTO): UrlDTO? {
         val urlEntity = urlRepo.save(URLMapper.fromDto(url))
-        val users = userRepo.saveAll(url.userIds?.map { UserMapper.fromDto(it) }?.toMutableSet() ?: mutableSetOf())
+        val users = userRepo.saveAll(url.users?.map { UserMapper.fromDto(it) }?.toMutableSet() ?: mutableSetOf())
         users.collect {
             userAndURLEntity.save(UserAndURLEntity(urlId = urlEntity.id, userId = it.id))
         }

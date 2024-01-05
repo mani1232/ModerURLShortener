@@ -10,7 +10,7 @@ data class UserDTO(
     var password: String,
     var token: String,
     @Transient
-    val urlIds: MutableSet<UrlDTO>? = mutableSetOf(),
+    val urls: MutableSet<UrlDTO>? = mutableSetOf(),
 )
 
 data class UrlDTO(
@@ -24,5 +24,5 @@ data class UrlDTO(
     var shortUrl: String,
     var fullUrl: String,
     @Transient
-    val userIds: MutableSet<UserDTO>? = mutableSetOf()
+    val users: MutableSet<UserDTO>? = mutableSetOf()
 )

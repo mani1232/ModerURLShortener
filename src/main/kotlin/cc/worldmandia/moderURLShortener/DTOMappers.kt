@@ -8,7 +8,7 @@ object UserMapper {
             password = userEntity.password,
             token = userEntity.token,
             username = userEntity.username,
-            urlIds = urls
+            urls = urls
         ) else null
     }
 
@@ -35,7 +35,7 @@ object URLMapper {
             fullUrl = urlEntity.fullUrl,
             shortUrl = urlEntity.shortUrl,
             title = urlEntity.title,
-            userIds = users,
+            users = users,
         ) else null
     }
 
